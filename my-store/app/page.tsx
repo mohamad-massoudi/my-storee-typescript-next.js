@@ -1,4 +1,5 @@
-import ProductList from "./products";
+import ProductList from "./products/page";
+
 
 export default function Home() {
   return (
