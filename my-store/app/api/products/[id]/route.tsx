@@ -24,4 +24,3 @@ export async function GET(req: Request, { params }: { params: ProductParams }) {
 
   return NextResponse.json(product);
 }
-
