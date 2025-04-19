@@ -1,4 +1,4 @@
-"use client"; // برای مشخص کردن که این کامپوننت به صورت Client Component است
+"use client";
 
 import { useState, useEffect } from "react";
 import { Product } from "@/app/types";
@@ -6,18 +6,23 @@ import { useRouter } from "next/router";
 
 export default function EditProduct() {
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query;  // دریافت پارامتر ID از URL
   const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // بارگذاری اطلاعات محصول بر اساس ID
+  // بارگذاری اطلاعات محصول با استفاده از ID
   useEffect(() => {
     if (id) {
       setLoading(true);
       fetch(`/api/products/${id}`)
         .then((res) => res.json())
         .then((data) => {
+          if (data.error) {
+            setError(data.error); // نمایش خطا در صورت نبود محصول
+            setLoading(false);
+            return;
+          }
           setProduct(data);
           setLoading(false);
         })
@@ -31,8 +36,8 @@ export default function EditProduct() {
   // مدیریت ویرایش محصول
   const handleEditProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (product) {
+      setLoading(true);
       const res = await fetch(`/api/products/${product.id}`, {
         method: "PUT",
         headers: {
@@ -47,15 +52,14 @@ export default function EditProduct() {
       } else {
         setError("ویرایش محصول با خطا مواجه شد.");
       }
+      setLoading(false);
     }
   };
 
-  // نمایش پیام لودینگ
   if (loading) {
     return <p>در حال بارگذاری محصول...</p>;
   }
 
-  // نمایش پیام خطا
   if (error) {
     return <p className="text-red-500">{error}</p>;
   }

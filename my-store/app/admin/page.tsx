@@ -30,6 +30,7 @@ export default function AdminPanel() {
       });
   }, []);
 
+  // اضافه کردن محصول جدید
   const handleAddProduct = async () => {
     setLoading(true);
     const res = await fetch("/api/products", {
@@ -50,18 +51,19 @@ export default function AdminPanel() {
     setLoading(false);
   };
 
+  // حذف محصول
   const handleDeleteProduct = async (id: number) => {
-    setLoading(true);  // برای نشان دادن لودینگ
+    setLoading(true);
     const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
-  
+
     if (res.ok) {
       setProducts(products.filter((product) => product.id !== id));
       setMessage("محصول با موفقیت حذف شد!");
     } else {
       setMessage("حذف محصول با خطا مواجه شد.");
     }
-  
-    setLoading(false);  // برای مخفی کردن لودینگ
+
+    setLoading(false);
   };
 
   return (
@@ -130,11 +132,6 @@ export default function AdminPanel() {
                 >
                   حذف
                 </button>
-                <Link href={`/admin/products/edit/${product.id}`}>
-                  <button className="bg-yellow-500 text-white p-2 rounded-lg ml-4">
-                    ویرایش
-                  </button>
-                </Link>
               </div>
             </div>
           ))
